@@ -9,8 +9,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 include(FindDependencies)
 
-add_subdirectory(../4_SDK/libflorid/protocols florid_net_protocols)
-
 add_library(usb_protocol INTERFACE)
 
 target_include_directories(usb_protocol INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
