@@ -16,7 +16,6 @@ target_include_directories(usb_protocol INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/in
 target_link_libraries(usb_protocol INTERFACE
         rpl::rpl
         unordered_dense::unordered_dense
-        florid_protocol
 )
 
 if (BUILD_EXAMPLE)
