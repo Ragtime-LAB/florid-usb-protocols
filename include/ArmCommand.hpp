@@ -471,7 +471,7 @@ namespace florid::usb
         float kd[6];
         uint32_t dt_us;
         uint16_t seq;
-        uint8_t control_mode;
+        uint8_t control_mode; // bit[1:0]=type(0=hold,1=MIT,3=torque), bit[2]=gravity_enable
     } __attribute__((packed));
 
     struct JointPosVelCommandPacket
