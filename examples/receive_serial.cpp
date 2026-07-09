@@ -2,13 +2,14 @@
 #include <ArmStatus.hpp>
 #include <ProtocolStack.hpp>
 
-#include <HySerial/HySerial.hpp>
+#include <astrial.hpp>
 
 #include <chrono>
 #include <cstdint>
 #include <cstring>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <string>
 #include <thread>
 #include <atomic>
@@ -21,13 +22,12 @@ using DeviceStack = ProtocolStack<std::chrono::steady_clock,
                                   SetMitLimitRequestPacket, SetMitLimitResponsePacket>;
 
 static DeviceStack* g_stack_ptr = nullptr;
-static HySerial::Serial* g_serial = nullptr;
+static Serial* g_serial = nullptr;
 
 static bool send_over_serial(const uint8_t* frame, size_t len)
 {
     if (!g_serial) return false;
-    g_serial->send(std::span(reinterpret_cast<const std::byte*>(frame), len));
-    return true;
+    return g_serial->write(std::span(frame, len)).has_value();
 }
 
 static void handle_set_mit_limit(const uint16_t, const TransactionId tx_id,
@@ -64,24 +64,19 @@ int main(int argc, char** argv)
 
     stack.register_handler(RPL::Meta::PacketTraits<SetMitLimitRequestPacket>::cmd, handle_set_mit_limit);
 
-    HySerial::Builder b;
-    b.device(port).baud_rate(115200)
-     .data_bits(HySerial::DataBits::BITS_8)
-     .parity(HySerial::Parity::NONE)
-     .stop_bits(HySerial::StopBits::ONE);
+    auto result = Serial::builder()
+        .buad_rate(115200)
+        .parity(Parity::None)
+        .stop_bits(StopBits::One)
+        .open(port);
+    if (!result) throw std::runtime_error(std::string("[device] open: ") + result.error().message);
 
-    b.on_read([&stack](std::span<const std::byte> data)
+    auto serial = std::make_optional(std::move(result.value()));
+    g_serial = &serial.value();
+    serial->on_data([&stack](std::span<const uint8_t> data)
     {
-        stack.isr_feed(reinterpret_cast<const uint8_t*>(data.data()), data.size());
+        stack.isr_feed(data.data(), data.size());
     });
-    b.on_error([](ssize_t e) { std::cerr << "[device] serial error: " << e << "\n"; });
-
-    auto res = b.build();
-    if (!res) throw std::runtime_error(std::string("[device] open: ") + res.error().message);
-
-    std::unique_ptr<HySerial::Serial> serial = std::move(res.value());
-    g_serial = serial.get();
-    serial->start_read(4096);
     stack.set_send_frame(send_over_serial);
 
     std::cout << "[device] serial ready, waiting for requests ...\n";

@@ -3,7 +3,7 @@
 #include <ProtocolStack.hpp>
 #include <ISRRingBuffer.hpp>
 
-#include <HySerial/HySerial.hpp>
+#include <astrial.hpp>
 
 #include <atomic>
 #include <chrono>
@@ -11,6 +11,7 @@
 #include <cstring>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <string>
 #include <thread>
 
@@ -23,7 +24,7 @@ using HostStack = ProtocolStack<std::chrono::steady_clock,
 
 struct HostTransport
 {
-    std::unique_ptr<HySerial::Serial> serial;
+    std::optional<Serial> serial;
     HostStack stack;
     std::atomic<bool> done{false};
     std::atomic<bool> success{false};
@@ -40,31 +41,25 @@ struct HostTransport
     {
         s_instance = this;
 
-        HySerial::Builder b;
-        b.device(device)
-         .baud_rate(115200)
-         .data_bits(HySerial::DataBits::BITS_8)
-         .parity(HySerial::Parity::NONE)
-         .stop_bits(HySerial::StopBits::ONE);
+        auto result = Serial::builder()
+            .buad_rate(115200)
+            .parity(Parity::None)
+            .stop_bits(StopBits::One)
+            .open(device);
+        if (!result)
+            throw std::runtime_error(std::string("[host] open: ") + result.error().message);
+        serial = std::move(result.value());
 
-        b.on_read([this](std::span<const std::byte> data)
+        serial->on_data([this](std::span<const uint8_t> data)
         {
-            stack.isr_feed(reinterpret_cast<const uint8_t*>(data.data()), data.size());
+            stack.isr_feed(data.data(), data.size());
         });
-
-        b.on_error([](ssize_t e) { std::cerr << "[host] serial error: " << e << "\n"; });
-
-        auto res = b.build();
-        if (!res)
-            throw std::runtime_error(std::string("[host] open: ") + res.error().message);
-        serial = std::move(res.value());
-        serial->start_read(4096);
 
         stack.set_send_frame([](const uint8_t* frame, size_t len) -> bool
         {
-            if (!s_instance || !s_instance->serial) return false;
-            s_instance->serial->send(std::span(reinterpret_cast<const std::byte*>(frame), len));
-            return true;
+            if (!s_instance || !s_instance->serial.has_value()) return false;
+            auto ec = s_instance->serial->write(std::span(frame, len));
+            return ec.has_value();
         });
     }
 
