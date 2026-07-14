@@ -6,6 +6,8 @@
 #include <RPL/Meta/PacketTraits.hpp>
 #include <ProtocolDispatch.hpp>
 
+#pragma pack(push, 1)
+
 namespace florid::usb
 {
 
@@ -23,7 +25,7 @@ struct JointStatus
     std::array<float, 6> q;
     std::array<float, 6> dq;
     std::array<float, 6> tau;
-} __attribute__((packed));
+};
 
 struct GripperStatus
 {
@@ -33,7 +35,7 @@ struct GripperStatus
     float temp_c;
     uint8_t enabled;
     uint8_t _pad[3];
-} __attribute__((packed));
+};
 
 struct ArmStatus
 {
@@ -44,7 +46,7 @@ struct ArmStatus
     JointStatus status;
     float base_gravity[3];
     GripperStatus gripper;
-} __attribute__((packed));
+};
 
 // ──────────────────────────────────────────────
 //  Per-motor telemetry broadcast
@@ -60,12 +62,12 @@ struct ArmStatus
         float speed_rad_s;
         float torque_nm;
         float temp_c;
-    } __attribute__((packed));
+    };
 
     struct MotorFeedbackArray
     {
         MotorFeedback motors[7];
-    } __attribute__((packed));
+    };
 
 } // namespace florid::usb
 
@@ -128,5 +130,7 @@ struct RPL::Meta::PacketTraits<florid::usb::GripperStatus>
         florid::usb::detail::dispatch_status_after_parse(pkt);
     }
 };
+
+#pragma pack(pop)
 
 #endif // FLORID_PROTOCOLS_ARMSTATUS_HPP

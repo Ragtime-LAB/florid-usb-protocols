@@ -6,6 +6,8 @@
 #include <ProtocolDispatch.hpp>
 #include <ArmStatus.hpp>
 
+#pragma pack(push, 1)
+
 namespace florid::usb
 {
     using TransactionId = uint32_t;
@@ -122,65 +124,65 @@ namespace florid::usb
         uint8_t joint_id;
         float torque_limit_nm;
         float velocity_limit_rps;
-    } __attribute__((packed));
+    };
 
     struct SetMotorStateCommand
     {
         uint8_t joint_id;
         MotorStateValue state;
-    } __attribute__((packed));
+    };
 
     struct SetMotorControlModeCommand
     {
         uint8_t joint_id;
         MotorControlMode mode;
-    } __attribute__((packed));
+    };
 
     struct SetZeroCommand
     {
         uint8_t joint_id;
-    } __attribute__((packed));
+    };
 
     struct ClearErrorCommand
     {
         uint8_t joint_id;
-    } __attribute__((packed));
+    };
 
     struct HomeAllCommand
     {
         uint8_t dummy;
-    } __attribute__((packed));
+    };
 
     struct RunCalibrationCommand
     {
         CalibrationType calib_type;
-    } __attribute__((packed));
+    };
 
     struct ClearFaultsCommand
     {
         uint8_t dummy;
-    } __attribute__((packed));
+    };
 
     struct SetSafetyCommand
     {
         float e_stop_deceleration_dps2;
         float max_payload_kg;
-    } __attribute__((packed));
+    };
 
     struct SdkClientConnectedCommand
     {
         uint8_t dummy;
-    } __attribute__((packed));
+    };
 
     struct SdkClientDisconnectedCommand
     {
         uint8_t dummy;
-    } __attribute__((packed));
+    };
 
     struct HomeDoneCommand
     {
         uint8_t dummy;
-    } __attribute__((packed));
+    };
 
     // ──────────────────────────────────────────────
     //  Response payloads
@@ -189,57 +191,57 @@ namespace florid::usb
     struct SetMitLimitResponse
     {
         SetMitLimitStatus status;
-    } __attribute__((packed));
+    };
 
     struct SetMotorStateResponse
     {
         SetMotorStateStatus status;
-    } __attribute__((packed));
+    };
 
     struct SetMotorControlModeResponse
     {
         SetMotorControlModeStatus status;
-    } __attribute__((packed));
+    };
 
     struct SetZeroResponse
     {
         SetZeroStatus status;
-    } __attribute__((packed));
+    };
 
     struct ClearErrorResponse
     {
         ClearErrorStatus status;
-    } __attribute__((packed));
+    };
 
     struct HomeAllResponse
     {
         HomeAllStatus status;
-    } __attribute__((packed));
+    };
 
     struct RunCalibrationResponse
     {
         RunCalibrationStatus status;
-    } __attribute__((packed));
+    };
 
     struct ClearFaultsResponse
     {
         ClearFaultsStatus status;
-    } __attribute__((packed));
+    };
 
     struct SetSafetyResponse
     {
         SetSafetyStatus status;
-    } __attribute__((packed));
+    };
 
     struct SdkClientNotifyResponse
     {
         SdkClientNotifyStatus status;
-    } __attribute__((packed));
+    };
 
     struct HomeDoneResponse
     {
         HomeDoneStatus status;
-    } __attribute__((packed));
+    };
 
     // ──────────────────────────────────────────────
     //  Request packets  (host → firmware)
@@ -250,79 +252,79 @@ namespace florid::usb
         TransactionId tx_id;
         uint16_t cmd_id;
         uint8_t status;
-    } __attribute__((packed));
+    };
 
     struct SetMitLimitRequestPacket
     {
         TransactionId tx_id;
         SetMitLimitCommand payload;
-    } __attribute__((packed));
+    };
 
     struct SetMotorStateRequestPacket
     {
         TransactionId tx_id;
         SetMotorStateCommand payload;
-    } __attribute__((packed));
+    };
 
     struct SetMotorControlModeRequestPacket
     {
         TransactionId tx_id;
         SetMotorControlModeCommand payload;
-    } __attribute__((packed));
+    };
 
     struct SetZeroRequestPacket
     {
         TransactionId tx_id;
         SetZeroCommand payload;
-    } __attribute__((packed));
+    };
 
     struct ClearErrorRequestPacket
     {
         TransactionId tx_id;
         ClearErrorCommand payload;
-    } __attribute__((packed));
+    };
 
     struct HomeAllRequestPacket
     {
         TransactionId tx_id;
         HomeAllCommand payload;
-    } __attribute__((packed));
+    };
 
     struct RunCalibrationRequestPacket
     {
         TransactionId tx_id;
         RunCalibrationCommand payload;
-    } __attribute__((packed));
+    };
 
     struct ClearFaultsRequestPacket
     {
         TransactionId tx_id;
         ClearFaultsCommand payload;
-    } __attribute__((packed));
+    };
 
     struct SetSafetyRequestPacket
     {
         TransactionId tx_id;
         SetSafetyCommand payload;
-    } __attribute__((packed));
+    };
 
     struct SdkClientConnectedRequestPacket
     {
         TransactionId tx_id;
         SdkClientConnectedCommand payload;
-    } __attribute__((packed));
+    };
 
     struct SdkClientDisconnectedRequestPacket
     {
         TransactionId tx_id;
         SdkClientDisconnectedCommand payload;
-    } __attribute__((packed));
+    };
 
     struct HomeDoneRequestPacket
     {
         TransactionId tx_id;
         HomeDoneCommand payload;
-    } __attribute__((packed));
+    };
 
     // ──────────────────────────────────────────────
     //  Response packets  (firmware → host)
@@ -332,73 +334,73 @@ namespace florid::usb
     {
         TransactionId tx_id;
         SetMitLimitResponse payload;
-    } __attribute__((packed));
+    };
 
     struct SetMotorStateResponsePacket
     {
         TransactionId tx_id;
         SetMotorStateResponse payload;
-    } __attribute__((packed));
+    };
 
     struct SetMotorControlModeResponsePacket
     {
         TransactionId tx_id;
         SetMotorControlModeResponse payload;
-    } __attribute__((packed));
+    };
 
     struct SetZeroResponsePacket
     {
         TransactionId tx_id;
         SetZeroResponse payload;
-    } __attribute__((packed));
+    };
 
     struct ClearErrorResponsePacket
     {
         TransactionId tx_id;
         ClearErrorResponse payload;
-    } __attribute__((packed));
+    };
 
     struct HomeAllResponsePacket
     {
         TransactionId tx_id;
         HomeAllResponse payload;
-    } __attribute__((packed));
+    };
 
     struct RunCalibrationResponsePacket
     {
         TransactionId tx_id;
         RunCalibrationResponse payload;
-    } __attribute__((packed));
+    };
 
     struct ClearFaultsResponsePacket
     {
         TransactionId tx_id;
         ClearFaultsResponse payload;
-    } __attribute__((packed));
+    };
 
     struct SetSafetyResponsePacket
     {
         TransactionId tx_id;
         SetSafetyResponse payload;
-    } __attribute__((packed));
+    };
 
     struct SdkClientConnectedResponsePacket
     {
         TransactionId tx_id;
         SdkClientNotifyResponse payload;
-    } __attribute__((packed));
+    };
 
     struct SdkClientDisconnectedResponsePacket
     {
         TransactionId tx_id;
         SdkClientNotifyResponse payload;
-    } __attribute__((packed));
+    };
 
     struct HomeDoneResponsePacket
     {
         TransactionId tx_id;
         HomeDoneResponse payload;
-    } __attribute__((packed));
+    };
 
     // ──────────────────────────────────────────────
     //  USB Session protocol
@@ -417,46 +419,46 @@ namespace florid::usb
     struct UsbSessionStartCommand
     {
         uint8_t dummy;
-    } __attribute__((packed));
+    };
 
     struct UsbSessionStopCommand
     {
         uint8_t dummy;
-    } __attribute__((packed));
+    };
 
     struct UsbSessionStartResponse
     {
         UsbSessionStartStatus status;
-    } __attribute__((packed));
+    };
 
     struct UsbSessionStopResponse
     {
         UsbSessionStopStatus status;
-    } __attribute__((packed));
+    };
 
     struct UsbSessionStartRequestPacket
     {
         TransactionId tx_id;
         UsbSessionStartCommand payload;
-    } __attribute__((packed));
+    };
 
     struct UsbSessionStartResponsePacket
     {
         TransactionId tx_id;
         UsbSessionStartResponse payload;
-    } __attribute__((packed));
+    };
 
     struct UsbSessionStopRequestPacket
     {
         TransactionId tx_id;
         UsbSessionStopCommand payload;
-    } __attribute__((packed));
+    };
 
     struct UsbSessionStopResponsePacket
     {
         TransactionId tx_id;
         UsbSessionStopResponse payload;
-    } __attribute__((packed));
+    };
 
     // ──────────────────────────────────────────────
     //  Real-time control  (fire-and-forget, no tx_id)
@@ -472,7 +474,7 @@ namespace florid::usb
         uint32_t dt_us;
         uint16_t seq;
         uint8_t control_mode; // bit[1:0]=type(0=hold,1=MIT,3=torque), bit[2]=gravity_enable
-    } __attribute__((packed));
+    };
 
     struct JointPosVelCommandPacket
     {
@@ -480,14 +482,14 @@ namespace florid::usb
         float dq[6];
         uint8_t enabled_mask;
         uint16_t seq;
-    } __attribute__((packed));
+    };
 
     struct JointVelocityCommandPacket
     {
         float dq[6];
         uint8_t enabled_mask;
         uint16_t seq;
-    } __attribute__((packed));
+    };
 
     struct JointHybridCommandPacket
     {
@@ -496,12 +498,12 @@ namespace florid::usb
         float current_limit_norm[6];
         uint8_t enabled_mask;
         uint16_t seq;
-    } __attribute__((packed));
+    };
 
     struct EmergencyStopPacket
     {
         uint8_t dummy;
-    } __attribute__((packed));
+    };
 
     struct GripperCommandPacket
     {
@@ -513,7 +515,7 @@ namespace florid::usb
         uint32_t dt_us;
         uint16_t seq;
         uint8_t control_mode;
-    } __attribute__((packed));
+    };
 
     // ──────────────────────────────────────────────
     //  Motor feedback (request-response, replaces broadcast)
@@ -522,24 +524,24 @@ namespace florid::usb
     struct GetMotorFeedbackCommand
     {
         uint8_t dummy;
-    } __attribute__((packed));
+    };
 
     struct GetMotorFeedbackResponse
     {
         MotorFeedbackArray motors;
-    } __attribute__((packed));
+    };
 
     struct GetMotorFeedbackRequestPacket
     {
         TransactionId tx_id;
         GetMotorFeedbackCommand payload;
-    } __attribute__((packed));
+    };
 
     struct GetMotorFeedbackResponsePacket
     {
         TransactionId tx_id;
         GetMotorFeedbackResponse payload;
-    } __attribute__((packed));
+    };
 } // namespace florid::usb
 
 // ══════════════════════════════════════════════
@@ -1081,5 +1083,7 @@ struct RPL::Meta::PacketTraits<florid::usb::GetMotorFeedbackResponsePacket>
         florid::usb::detail::dispatch_after_parse(pkt);
     }
 };
+
+#pragma pack(pop)
 
 #endif // FLORID_PROTOCOLS_ARMCOMMAND_HPP
