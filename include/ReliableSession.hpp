@@ -57,6 +57,11 @@ namespace florid::usb
             return m_next_tx_id++;
         }
 
+        void set_next_tx_id(TransactionId next_tx_id)
+        {
+            m_next_tx_id = (next_tx_id == 0) ? 1 : next_tx_id;
+        }
+
         void register_pending(const TransactionId tx_id,
                               const uint16_t request_cmd,
                               const uint16_t response_cmd,
